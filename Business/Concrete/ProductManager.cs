@@ -62,11 +62,13 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
+        
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
+            //iş kuralları çalışır
             IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName),
-                 CheckIfProductCountOfCategoryCorrect(product.CategoryId));
+                 CheckIfProductCountOfCategoryCorrect(product.CategoryId),CheckIfCategoryLimitExceded());
 
             if (result != null)
             {
@@ -89,6 +91,7 @@ namespace Business.Concrete
 
         }
 
+        //Bir kategorideki ürün sayısı 15 ve üstü olamaz.
         private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
         {
             var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count;
@@ -101,6 +104,8 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+
+        //Aynı isimde ürün eklenemez
         private IResult CheckIfProductNameExists(string productName)
         {
             var result = _productDal.GetAll(p => p.ProductName == productName).Any();
@@ -111,6 +116,8 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
+
+        
 
         private IResult CheckIfCategoryLimitExceded()
         {
