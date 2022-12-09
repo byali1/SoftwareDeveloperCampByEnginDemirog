@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Business.Concrete;
+using Core.DependencyResolvers;
+using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
@@ -36,10 +38,13 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddSingleton<IProductService, ProductManager>();
-            //services.AddSingleton<IProductDal, EfProductDal>();
-
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
+            //CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin",
+                    builder => builder.WithOrigins("http://localhost:3000"));
+            });
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
@@ -57,7 +62,10 @@ namespace WebAPI
                         IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                     };
                 });
-            //ServiceTool.Create(services);
+            services.AddDependencyResolvers(new ICoreModule[]
+            {
+                new CoreModule()
+            });
         }
 
 
@@ -71,12 +79,14 @@ namespace WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            //CORS
+            app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader()); //Buradan gelen talebe izin ver
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseAuthentication();
-
-            app.UseAuthorization();
+            app.UseAuthentication();//girmek için key (kimlik doðrulama)
+            app.UseAuthorization(); //girdikten sonra ne yapabiliriz (yetki)
 
             app.UseEndpoints(endpoints =>
             {
