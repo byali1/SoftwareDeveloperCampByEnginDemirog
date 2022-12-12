@@ -1,10 +1,10 @@
 # FinalProject
 kodlama.io Yazılım Geliştirici Yetiştirme Kampı Büyük Proje
 
-This project includes 
+Highlights of this project
 - SOLID principles
 - Aspect Oriented Programming
 - Fluent Validation
 - Cross Cutting Concerns (Cache,Transaction,Performance,Authorization,Security,Validation) 
 
-and will be updated..
+and more... (will be updated over time)
