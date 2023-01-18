@@ -42,8 +42,8 @@ namespace WebAPI
             //CORS
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowOrigin",
-                    builder => builder.WithOrigins("http://localhost:3000"));
+                //options.AddPolicy("AllowOrigin",
+                //    builder => builder.WithOrigins("http://localhost:3000"));
             });
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
@@ -80,7 +80,7 @@ namespace WebAPI
             }
 
             //CORS
-            app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader()); //Buradan gelen talebe izin ver
+            app.UseCors(builder => builder.WithOrigins("http://localhost:3000","http://localhost:4200").AllowAnyHeader()); //Buradan gelen talebe izin ver
 
             app.UseHttpsRedirection();
 
