@@ -38,6 +38,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerDocument();
             
             //CORS
             services.AddCors(options =>
@@ -85,6 +86,8 @@ namespace WebAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
             app.UseAuthentication();//girmek için key (kimlik doðrulama)
             app.UseAuthorization(); //girdikten sonra ne yapabiliriz (yetki)
 
